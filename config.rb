@@ -30,6 +30,13 @@ activate :directory_indexes
 
 activate :autoprefixer
 
+
+PAGES = ['index']
+
+PAGES.each do |name|
+  proxy "/amp/#{name}.html", name+".html"
+end
+
 ###
 # Helpers
 ###
@@ -56,19 +63,29 @@ configure :build do
   activate :minify_css
 end
 
+
+def inline_stylesheet(index_path)
+  @INDEX = File.read( index_path )
+
+  path_to_index_dir = index_path.match(/^([\w\/]*\/)[\w]*\.html$/)
+  stylesheet_link_regex = /<link href="((\.{2,}\/)?stylesheets\/[\w]*\.css)" rel="stylesheet" \/>/
+  @STYLESHEET = File.read( path_to_index_dir[1] + @INDEX.match(stylesheet_link_regex)[1] )
+
+  # inline the stylesheet and save file
+  File.write(index_path, @INDEX.gsub(
+    stylesheet_link_regex,
+    '<style amp-custom>'+@STYLESHEET+'</style>')
+  )
+end
+
 after_build do
 
-  index_path = 'build/index.html'
-  @INDEX = File.read( index_path )
-  @STYLESHEET = File.read( 'build/stylesheets/site.css' )
-
-  # inline the stylesheet
-  @INDEX = @INDEX.gsub(
-    '<link href="stylesheets/site.css" rel="stylesheet" />',
-    '<style amp-custom>'+@STYLESHEET+'</style>')
+  PAGES.each do |name|
+    # inline in base file and in AMP version
+    inline_stylesheet("build/#{name}.html")
+    inline_stylesheet("build/amp/#{name}.html")
+  end
   # rm stylesheet
   FileUtils.rm_rf 'build/stylesheets'
-  # save file
-  File.write(index_path, @INDEX)
 
 end
