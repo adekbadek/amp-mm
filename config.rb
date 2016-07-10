@@ -23,11 +23,19 @@ activate :directory_indexes
 
 activate :autoprefixer
 
-
-PAGES = ['index']
-
-PAGES.each do |name|
-  proxy "/amp/#{name}.html", name+".html"
+# get pages with 'amp: true' in the frontmatter, proxy them to amp versions, and add to an array so that styles are inlined in after_build
+PAGES_TO_AMP = []
+#
+# https://middlemanapp.com/advanced/sitemap/#using-the-sitemap-in-config-rb
+ready do
+  sitemap.resources.group_by {|p| p.data["amp"] }.each do |make_amp_version, pages|
+    if make_amp_version
+      pages.each do |page|
+        proxy "/amp/#{page.path}", page.path
+        PAGES_TO_AMP.push(page.path.sub('.html', ''))
+      end
+    end
+  end
 end
 
 ###
@@ -74,15 +82,17 @@ configure :build do
 end
 
 
-def inline_stylesheet(index_path)
-  @INDEX = File.read( index_path )
+def inline_stylesheet(html_path, file)
 
-  path_to_index_dir = index_path.match(/^([\w\/]*\/)[\w]*\.html$/)
-  stylesheet_link_regex = /<link href="((\.{2,}\/)?stylesheets\/[\w]*\.css)" rel="stylesheet" \/>/
+  full_path = file == 'index' ? html_path + '.html' : html_path + '/index.html'
+  @INDEX = File.read( full_path )
+
+  path_to_index_dir = full_path.match(/([\w\-\/]*\/)[\w\-]*\.html$/)
+  stylesheet_link_regex = /<link href="([..\/]*?stylesheets\/[\w\-]*\.css)" rel="stylesheet" \/>/
+
   @STYLESHEET = File.read( path_to_index_dir[1] + @INDEX.match(stylesheet_link_regex)[1] )
-
   # inline the stylesheet and save file
-  File.write(index_path, @INDEX.gsub(
+  File.write(full_path, @INDEX.gsub(
     stylesheet_link_regex,
     '<style amp-custom>'+@STYLESHEET+'</style>')
   )
@@ -90,12 +100,9 @@ end
 
 after_build do
 
-  PAGES.each do |name|
-    # inline in base file and in AMP version
-    inline_stylesheet("build/#{name}.html")
-    inline_stylesheet("build/amp/#{name}.html")
+  PAGES_TO_AMP.each do |name|
+    # inline in AMP version
+    inline_stylesheet("build/amp/#{name}", name)
   end
-  # rm stylesheet
-  FileUtils.rm_rf 'build/stylesheets'
 
 end
