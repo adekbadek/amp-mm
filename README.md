@@ -6,18 +6,19 @@ Using [Middleman](https://middlemanapp.com/) and [AMP Project](https://www.amppr
 ## Accelerated Mobile Pages project in short
 
 - Targeted towards online publishing, but is suitable for any web content
-  - instant loading with pre-loading (actually pre-loading only the ATF content)
+  - instant loading with pre-loading (actually pre-loading only the [ATF](https://en.wikipedia.org/wiki/Above_the_fold) content)
   - AMP pages are cached by Google
 - An AMP page contains a script that handles the page load
-- `<img>` tags become `<amp-img>` tags, so AMP can handle what loads when - above-the-fold content is prioritized
-  - `layout="responsive"`
-  - resize is allowed if element is not in the viewport
 - self-validates and outputs to console (append `#development=1` to URL for debugging)
-- Carousels, a lightbox, YT videos, tweets, etc. - are all AMP components (e.g. `<amp-youtube>`), special script has to be included for each
+- Carousels, lightboxes, YT videos, tweets, etc. - are all [AMP extensions](https://ampbyexample.com/) (e.g. `<amp-youtube>`), a special script has to be included for each
   - AMP creates a box that is filled with content when the extension loads
+  - e.g. `<img>` element has to become `<amp-img>`, so AMP can decide what loads when - ATF content is prioritized
+    - it has to have `width` and `height` inlined
+    - can take a `srcset` instead of `src` (for responsive images)
+    - add `layout="responsive"` to adapt size to viewport (while keeping the ratio based on the inlined dimensions)
+    - resize is allowed if element is not in the viewport
 
-
-## Quirks
+## Notable AMP quirks
 
 ### Stylesheets
 
@@ -26,4 +27,12 @@ Using [Middleman](https://middlemanapp.com/) and [AMP Project](https://www.amppr
 
 ### Scripts
 
-- Non-amp JS is not allowed at all. Either [find](https://www.ampproject.org/docs/reference/extended.html) (or create) an AMP component or don't use AMP.
+- Non-AMP JS is not allowed at all. Either [find](https://www.ampproject.org/docs/reference/extended.html) (or create) an AMP component or don't use AMP.
+
+
+## How to use this project
+
+- Declare if a page should be also build as AMP page in the frontmatter (by default, it's not)
+- Custom helpers:
+  - `amp_img()` - in the non-AMP version, it will output a regular image tag
+  - `is_amp()`
