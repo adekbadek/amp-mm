@@ -70,6 +70,9 @@ helpers do
     end
   end
 
+  def is_amp()
+    current_page.path.match(/^amp/)
+  end
 end
 
 # Build-specific configuration
