@@ -26,3 +26,6 @@
   %body{:class => page_classes}
 
     = yield
+
+    - unless amp_version
+      = javascript_include_tag :all
