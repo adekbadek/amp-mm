@@ -32,7 +32,7 @@ Using [Middleman](https://middlemanapp.com/) and [AMP Project](https://www.amppr
 
 ## How to use this project
 
-- Declare if a page should be also build as AMP page in the frontmatter (by default, it's not)
+- Declare if a page should be also built as AMP page in the [frontmatter](https://middlemanapp.com/basics/frontmatter/) (by default, it's not)
 - Custom helpers:
   - `amp_img()` - in the non-AMP version, it will output a regular image tag
   - `is_amp()`
