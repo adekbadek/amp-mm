@@ -50,7 +50,7 @@ helpers do
     imagePath = 'images/'+path
     size = FastImage.size('source/'+imagePath)
     altText = options[:alt] ? options[:alt] : path.gsub(/\.[\w]*/, '')
-    if options[:amp]
+    if current_page.path.match(/^amp/)
       '<amp-img '+(options[:layout] ? 'layout="'+options[:layout]+'"' : nil)+' src="../'+imagePath+'" alt="'+altText+'" width="'+size[0].to_s+'" height="'+size[1].to_s+'"></amp-img>'
     else
       '<img src="'+imagePath+'" alt="'+altText+'"></img>'
