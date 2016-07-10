@@ -2,4 +2,4 @@
 
   %h1 Accelerated Mobile Pages + Middleman
 
-  = amp_image "sonic_boom.jpg", alt: 'Picture of a Sonic Boom', layout: 'responsive'
+  = amp_image "sonic_boom.jpg", alt: 'Picture of a Sonic Boom', layout: 'responsive', amp: current_page.path.match(/^amp/)

@@ -42,7 +42,12 @@ helpers do
     imagePath = 'images/'+path
     size = FastImage.size('source/'+imagePath)
     altText = options[:alt] ? options[:alt] : path.gsub(/\.[\w]*/, '')
-    '<amp-img '+(options[:layout] ? 'layout="'+options[:layout]+'"' : nil)+' src="'+imagePath+'" alt="'+altText+'" width="'+size[0].to_s+'" height="'+size[1].to_s+'"></amp-img>'
+    if options[:amp]
+      '<amp-img '+(options[:layout] ? 'layout="'+options[:layout]+'"' : nil)+' src="../'+imagePath+'" alt="'+altText+'" width="'+size[0].to_s+'" height="'+size[1].to_s+'"></amp-img>'
+    else
+      '<img src="'+imagePath+'" alt="'+altText+'"></img>'
+    end
+  end
 
   # link the AMP version with non-AMP version
   # https://www.ampproject.org/docs/get_started/create/prepare_for_discovery.html
