@@ -8,6 +8,8 @@
 
     - amp_version = current_page.path.match(/^amp/) == nil ? false : true
 
+    = amp_link_pages(data.main.page_url, current_page.path, amp_version)
+
     -# AMP stuff
     - if amp_version
       %style{"amp-boilerplate" => ""}

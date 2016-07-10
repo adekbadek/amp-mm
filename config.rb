@@ -43,6 +43,18 @@ helpers do
     size = FastImage.size('source/'+imagePath)
     altText = options[:alt] ? options[:alt] : path.gsub(/\.[\w]*/, '')
     '<amp-img '+(options[:layout] ? 'layout="'+options[:layout]+'"' : nil)+' src="'+imagePath+'" alt="'+altText+'" width="'+size[0].to_s+'" height="'+size[1].to_s+'"></amp-img>'
+
+  # link the AMP version with non-AMP version
+  # https://www.ampproject.org/docs/get_started/create/prepare_for_discovery.html
+  def amp_link_pages(url, path, is_amp)
+    unless path.match('index.html')
+      path = path.sub('.html', '/index.html')
+    end
+    if is_amp
+      "<link rel='canonical' href='#{url+path.sub(/amp\//,'')}'>"
+    else
+      "<link rel='amphtml' href='#{url+'amp/'+path}'>"
+    end
   end
 
 end
