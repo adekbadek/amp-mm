@@ -11,13 +11,6 @@ page '/*.xml', layout: false
 page '/*.json', layout: false
 page '/*.txt', layout: false
 
-# With alternative layout
-# page "/path/to/file.html", layout: :otherlayout
-
-# Proxy pages (http://middlemanapp.com/basics/dynamic-pages/)
-# proxy "/this-page-has-no-template.html", "/template-file.html", locals: {
-#  which_fake_page: "Rendering a fake page with a local variable" }
-
 # General configuration
 
 # Reload the browser automatically whenever files change
@@ -25,7 +18,7 @@ configure :development do
   activate :livereload, apply_css_live: false, apply_js_live: false
 end
 
-# tell Middleman to create a folder for each .html file and place the built template file as the index of that folder
+# create a folder for each .html file and place the built template file as the index of that folder
 activate :directory_indexes
 
 activate :autoprefixer
